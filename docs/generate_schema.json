@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "/generate",
+  "title": "Generate pdf",
+  "description": "Generate pdf from input`",
+  "type": "object",
+  "properties": {
+    "document": {
+      "type": "object",
+      "description": "document basic information",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "document id"
+        },
+        "header": {
+          "type": "string",
+          "description": "document header. ex 'tax invoice', 'invoice', 'receipt', etc."
+        },
+        "code": {
+          "type": "string",
+          "description": "document type code"
+        },
+        "issue_date": {
+          "type": "string",
+          "description": "day/month/year format. ex 24/2/2564, 1/11/2564, etc."
+        }
+      },
+      "required": ["id", "header", "code"]
+    },
+    "seller": {
+      "type": "object",
+      "description": "seller information",
+      "$ref": "#/$defs/personal_information"
+    },
+    "customer": {
+      "type": "object",
+      "description": "customer information",
+      "$ref": "#/$defs/personal_information"
+    },
+    "items": {
+      "type": "array",
+      "description": "list of item or product in this trade transaction",
+      "$ref": "#/$defs/items"
+    },
+    "summary": {
+      "type": "object",
+      "description": "trade transaction summary",
+      "properties": {
+        "pre_vat": {
+          "type": "number",
+          "description": "trade transaction price summary",
+          "exclusiveMinimum": 0
+        },
+        "vat": {
+          "type": "number",
+          "description": "vat of trade transaction"
+        },
+        "grand_total": {
+          "type": "number",
+          "description": "trade transaction price summary tax included",
+          "exclusiveMinimum": 0
+        }
+      }
+    }
+  },
+  "required": ["document", "seller", "customer", "items"],
+  "$defs": {
+    "personal_information": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "seller name"
+        },
+        "address": {
+          "type": "string",
+          "description": "seller address"
+        },
+        "tax_id": {
+          "type": "string",
+          "description": "seller tax id"
+        },
+        "phone": {
+          "type": "string",
+          "description": "seller contact number"
+        },
+        "email": {
+          "type": "string",
+          "description": "seller contact email"
+        }
+      },
+      "required": ["name", "address"]
+    },
+    "item": {
+      "type": "object",
+      "description": "item/product information",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "item/product name and detail"
+        },
+        "quantity": {
+          "type": "integer",
+          "description": "item/product quantity that in this trade transaction",
+          "minimum": 1
+        },
+        "unit_price": {
+          "type": "number",
+          "description": "item/product price per unit",
+          "exclusiveMinimum": 0
+        },
+        "amount": {
+          "type": "number",
+          "description": "item/product absolute price in this trade transaction",
+          "exclusiveMinimum": 0
+        }
+      },
+      "required": ["name", "quantity", "unit_price"]
+    },
+    "items": {
+      "type": "array",
+      "description": "items/products information",
+      "items": { "$ref": "#/$defs/item" }
+    }
+  }
+}
